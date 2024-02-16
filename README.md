@@ -1,8 +1,9 @@
 # Scania-Test
-Assignment
+
+##Assignment
 We have a zoo, and want to know how much money we need to spend feeding the animals in
 a day.
-Description
+##Description
 There are 2 types of food: meat and fruit.
 Each of these will have a price per kg that will be provided in a text (.txt) file following the
 next strict format (with strict format we mean that when processing the file, it is not needed
@@ -66,9 +67,9 @@ File: zoo.xml
 </Zoo> -->
 =======================================
 
-Additional notes
+##Additional notes
 When solving the task please use Dependency Injection.
 
-Deliverables
+##Deliverables
 Please send us a full solution, including unit tests. Exclude binaries since they might be
 rejected by malware scanner.
