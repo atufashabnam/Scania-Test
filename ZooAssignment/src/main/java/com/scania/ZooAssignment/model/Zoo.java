@@ -1,68 +1,93 @@
-package com.scania.ZooAssignment.modal;
+package com.scania.ZooAssignment.model;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.*;
+
 import java.util.List;
-@XmlRootElement(name = "Zoo")
-public class Zoo {
-    private List<Lion> lions;
-    private List<Giraffe> giraffes;
-    private List<Tiger> tigers;
-    private List<Zebra> zebras;
-    private List<Wolf> wolves;
-    private List<Piranha> piranhas;
 
-    @XmlElement(name = "Lions")
-    public List<Lion> getLions() {
+@XmlRootElement(name = "Zoo")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Zoo {
+    @XmlElementWrapper(name= "Lions")
+    @XmlElement(name = "Lion")
+    private List<Animal> lions;
+
+    @XmlElementWrapper(name= "Giraffes")
+    @XmlElement(name = "Giraffe")
+    private List<Animal> giraffes;
+
+    @XmlElementWrapper(name= "Tigers")
+    @XmlElement(name = "Tiger")
+    private List<Animal> tigers;
+
+    @XmlElementWrapper(name= "Zebras")
+    @XmlElement(name = "Zebra")
+    private List<Animal> zebra;
+
+    @XmlElementWrapper(name= "Wolves")
+    @XmlElement(name = "Wolf")
+    private List<Animal> wolves;
+
+    @XmlElementWrapper(name= "Piranhas")
+    @XmlElement(name = "Piranha")
+    private List<Animal> piranha;
+
+    public Zoo(){
+    }
+
+    public Zoo(List<Animal> lions, List<Animal> giraffes, List<Animal> tigers, List<Animal> zebra, List<Animal> wolves, List<Animal> piranha) {
+        this.lions = lions;
+        this.giraffes = giraffes;
+        this.tigers = tigers;
+        this.zebra = zebra;
+        this.wolves = wolves;
+        this.piranha = piranha;
+    }
+
+    public List<Animal> getLions() {
         return lions;
     }
 
-    public void setLions(List<Lion> lions) {
+    public void setLions(List<Animal> lions) {
         this.lions = lions;
     }
 
-    @XmlElement(name = "Giraffes")
-    public List<Giraffe> getGiraffes() {
+    public List<Animal> getGiraffes() {
         return giraffes;
     }
 
-    public void setGiraffes(List<Giraffe> giraffes) {
+    public void setGiraffes(List<Animal> giraffes) {
         this.giraffes = giraffes;
     }
 
-    @XmlElement(name = "Tigers")
-    public List<Tiger> getTigers() {
+    public List<Animal> getTigers() {
         return tigers;
     }
 
-    public void setTigers(List<Tiger> tigers) {
+    public void setTigers(List<Animal> tigers) {
         this.tigers = tigers;
     }
 
-    @XmlElement(name = "Zebras")
-    public List<Zebra> getZebras() {
-        return zebras;
+    public List<Animal> getZebra() {
+        return zebra;
     }
 
-    public void setZebras(List<Zebra> zebras) {
-        this.zebras = zebras;
+    public void setZebra(List<Animal> zebra) {
+        this.zebra = zebra;
     }
 
-    @XmlElement(name = "Wolves")
-    public List<Wolf> getWolves() {
+    public List<Animal> getWolves() {
         return wolves;
     }
 
-    public void setWolves(List<Wolf> wolves) {
+    public void setWolves(List<Animal> wolves) {
         this.wolves = wolves;
     }
 
-    @XmlElement(name = "Piranhas")
-    public List<Piranha> getPiranhas() {
-        return piranhas;
+    public List<Animal> getPiranha() {
+        return piranha;
     }
 
-    public void setPiranhas(List<Piranha> piranhas) {
-        this.piranhas = piranhas;
+    public void setPiranha(List<Animal> piranha) {
+        this.piranha = piranha;
     }
 }
