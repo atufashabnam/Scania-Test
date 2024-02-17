@@ -42,9 +42,7 @@ public class FileService {
                     .collect(Collectors.toMap(
                             data -> data[0].toLowerCase(),
                             data -> Float.parseFloat(data[1])));
-        } catch (Exception ex) {
-            throw new IOException("Exceptionwhile processing Price file");
-        }
+        } 
     }
 
     public List<AnimalDiet> populateAnimalDietFromCsv() throws IOException, CsvException {

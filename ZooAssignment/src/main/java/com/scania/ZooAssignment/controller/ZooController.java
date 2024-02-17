@@ -16,7 +16,7 @@ public class ZooController {
         this.zooService = zooService;
     }
 
-    @GetMapping("/api/v1/zoo/cost")
+    @GetMapping("/api/zoo/cost")
     public Float calculateCostPerDay() throws IOException, CsvException, JAXBException {
         return zooService.calculateZooCostPerDay();
     }
