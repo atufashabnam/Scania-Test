@@ -36,7 +36,7 @@ public class FileService {
             return reader.lines()
                     .map(line -> line.split("\\s*=\\s*", 2))
                     .collect(Collectors.toMap(
-                            data -> data[0],
+                            data -> data[0].toLowerCase(),
                             data -> Float.parseFloat(data[1])));
         } catch (Exception ex) {
             throw new IOException("Exceptionwhile processing Price file");
