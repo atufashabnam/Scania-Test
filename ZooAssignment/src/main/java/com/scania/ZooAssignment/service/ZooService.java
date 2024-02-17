@@ -5,7 +5,5 @@ import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 
 public interface ZooService {
-    public double calculateCost() throws IOException, CsvException, JAXBException;
-
+    public Float calculateZooCostPerDay() throws IOException, CsvException, JAXBException;
 }
-

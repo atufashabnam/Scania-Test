@@ -21,7 +21,7 @@ public class Zoo {
 
     @XmlElementWrapper(name= "Zebras")
     @XmlElement(name = "Zebra")
-    private List<Animal> zebra;
+    private List<Animal> zebras;
 
     @XmlElementWrapper(name= "Wolves")
     @XmlElement(name = "Wolf")
@@ -29,18 +29,18 @@ public class Zoo {
 
     @XmlElementWrapper(name= "Piranhas")
     @XmlElement(name = "Piranha")
-    private List<Animal> piranha;
+    private List<Animal> piranhas;
 
     public Zoo(){
     }
 
-    public Zoo(List<Animal> lions, List<Animal> giraffes, List<Animal> tigers, List<Animal> zebra, List<Animal> wolves, List<Animal> piranha) {
+    public Zoo(List<Animal> lions, List<Animal> giraffes, List<Animal> tigers, List<Animal> zebras, List<Animal> wolves, List<Animal> piranhas) {
         this.lions = lions;
         this.giraffes = giraffes;
         this.tigers = tigers;
-        this.zebra = zebra;
+        this.zebras = zebras;
         this.wolves = wolves;
-        this.piranha = piranha;
+        this.piranhas = piranhas;
     }
 
     public List<Animal> getLions() {
@@ -67,12 +67,12 @@ public class Zoo {
         this.tigers = tigers;
     }
 
-    public List<Animal> getZebra() {
-        return zebra;
+    public List<Animal> getZebras() {
+        return zebras;
     }
 
-    public void setZebra(List<Animal> zebra) {
-        this.zebra = zebra;
+    public void setZebras(List<Animal> zebras) {
+        this.zebras = zebras;
     }
 
     public List<Animal> getWolves() {
@@ -83,11 +83,11 @@ public class Zoo {
         this.wolves = wolves;
     }
 
-    public List<Animal> getPiranha() {
-        return piranha;
+    public List<Animal> getPiranhas() {
+        return piranhas;
     }
 
-    public void setPiranha(List<Animal> piranha) {
-        this.piranha = piranha;
+    public void setPiranhas(List<Animal> piranhas) {
+        this.piranhas = piranhas;
     }
 }

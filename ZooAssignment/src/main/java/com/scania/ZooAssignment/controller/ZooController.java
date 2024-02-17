@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.scania.ZooAssignment.service.ZooService;
 import java.io.IOException;
 
-
 @RestController
 public class ZooController {
 
@@ -18,9 +17,7 @@ public class ZooController {
     }
 
     @GetMapping("/api/v1/zoo/cost")
-    public String calculateCostPerDay() throws IOException, CsvException, JAXBException {
-        zooService.calculateCost();
-        return "fff";
+    public Float calculateCostPerDay() throws IOException, CsvException, JAXBException {
+        return zooService.calculateZooCostPerDay();
     }
 }
-
