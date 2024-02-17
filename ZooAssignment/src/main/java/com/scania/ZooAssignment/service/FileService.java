@@ -25,12 +25,16 @@ import jakarta.xml.bind.Unmarshaller;
 public class FileService {
     private final ResourceLoader resourceLoader;
 
+    private static final String PRICESFILE = "prices.txt";
+    private static final String ANIMALSFILE = "animals.csv";
+    private static final String ZOOFILE = "zoo.xml";
+
     public FileService(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
     Map<String, Float> loadPricesFromFile() throws IOException {
-        Resource resource = resourceLoader.getResource("classpath:" + "prices.txt");
+        Resource resource = resourceLoader.getResource("classpath:" + PRICESFILE);
         InputStream inputStream = resource.getInputStream();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             return reader.lines()
@@ -44,7 +48,7 @@ public class FileService {
     }
 
     public List<AnimalDiet> populateAnimalDietFromCsv() throws IOException, CsvException {
-        Resource resource = resourceLoader.getResource("classpath:" + "animals.csv");
+        Resource resource = resourceLoader.getResource("classpath:" + ANIMALSFILE);
         return new CsvToBeanBuilder<AnimalDiet>(new InputStreamReader(resource.getInputStream()))
                 .withType(AnimalDiet.class)
                 .withSeparator(';')
@@ -53,7 +57,7 @@ public class FileService {
     }
 
     public Zoo populateZooAnimalsFromXml() throws IOException, JAXBException {
-        Resource resource = resourceLoader.getResource("classpath:" + "zoo.xml");
+        Resource resource = resourceLoader.getResource("classpath:" + ZOOFILE);
         JAXBContext jaxbContext = JAXBContext.newInstance(Zoo.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         return (Zoo) jaxbUnmarshaller.unmarshal(new InputStreamReader(resource.getInputStream()));
