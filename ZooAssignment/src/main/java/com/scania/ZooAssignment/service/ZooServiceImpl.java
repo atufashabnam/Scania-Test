@@ -6,6 +6,7 @@ import com.scania.ZooAssignment.model.AnimalDiet;
 import com.scania.ZooAssignment.model.Zoo;
 import jakarta.xml.bind.JAXBException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,10 +33,10 @@ public class ZooServiceImpl implements ZooService {
     }
 
     @Override
-    public Float calculateZooCostPerDay() throws IOException, CsvException, JAXBException {
-        Map<String, Float> prices = fileService.loadPricesFromFile();
-        List<AnimalDiet> diets = fileService.populateAnimalDietFromCsv();
-        Zoo zooAnimalList = fileService.populateZooAnimalsFromXml();
+    public Float calculateZooCostPerDay(MultipartFile textFile, MultipartFile csvFile, MultipartFile xmlFile) throws IOException, CsvException, JAXBException {
+        Map<String, Float> prices = fileService.loadPricesFromFile(textFile);
+        List<AnimalDiet> diets = fileService.populateAnimalDietFromCsv(csvFile);
+        Zoo zooAnimalList = fileService.populateZooAnimalsFromXml(xmlFile);
         Map<String, AnimalDiet> animalDietMap = convertAnimalDietToMap(diets);
         return calculateCost(prices, animalDietMap, zooAnimalList);
     }
@@ -75,7 +76,6 @@ public class ZooServiceImpl implements ZooService {
                     Float bodyWeightForFruit = animal.getKg() - bodyWeightForMeat;
                     totalCost += meatFoodPrice * bodyWeightForMeat * foodPerWeight;
                     totalCost += fruitFoodPrice * bodyWeightForFruit * foodPerWeight;
-
                 } else {
                     Float foodPrice = prices.get(foodType);
                     totalCost += foodPrice * animal.getKg() * foodPerWeight;

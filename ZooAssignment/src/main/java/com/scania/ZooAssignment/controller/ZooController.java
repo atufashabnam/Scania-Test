@@ -2,8 +2,14 @@ package com.scania.ZooAssignment.controller;
 
 import com.opencsv.exceptions.CsvException;
 import jakarta.xml.bind.JAXBException;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.scania.ZooAssignment.service.ZooService;
 import java.io.IOException;
 
@@ -16,8 +22,15 @@ public class ZooController {
         this.zooService = zooService;
     }
 
+    @PostMapping("/api/zoo/cost")
+    public ResponseEntity<Float> calculateCostPerDay(@RequestParam(value = "textFile") MultipartFile textFile,
+            @RequestParam(value = "csvFile") MultipartFile csvFile,
+            @RequestParam(value = "xmlFile") MultipartFile xmlFile) throws IOException, CsvException, JAXBException {
+        return ResponseEntity.ok(zooService.calculateZooCostPerDay(textFile, csvFile, xmlFile));
+    }
+
     @GetMapping("/api/zoo/cost")
-    public Float calculateCostPerDay() throws IOException, CsvException, JAXBException {
-        return zooService.calculateZooCostPerDay();
+    public ResponseEntity<Float> calculateCostPerDayDefault() throws IOException, CsvException, JAXBException {
+        return ResponseEntity.ok(zooService.calculateZooCostPerDay(null, null, null));
     }
 }

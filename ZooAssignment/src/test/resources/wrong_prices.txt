@@ -1,0 +1,2 @@
+Meat=asdfg
+Fruit=5.60

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvException;
@@ -25,17 +26,22 @@ import jakarta.xml.bind.Unmarshaller;
 public class FileService {
     private final ResourceLoader resourceLoader;
 
-    private static final String PRICESFILE = "prices.txt";
-    private static final String ANIMALSFILE = "animals.csv";
-    private static final String ZOOFILE = "zoo.xml";
+    private static final String STATIC_PRICES_FILE = "prices.txt";
+    private static final String STATIC_ANIMALS_FILE = "animals.csv";
+    private static final String STATIC_ZOO_FILE = "zoo.xml";
 
     public FileService(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
-    Map<String, Float> loadPricesFromFile() throws IOException {
-        Resource resource = resourceLoader.getResource("classpath:" + PRICESFILE);
-        InputStream inputStream = resource.getInputStream();
+    Map<String, Float> loadPricesFromFile(MultipartFile textFile) throws IOException {
+        InputStream inputStream = null;
+        if(textFile != null){
+            inputStream = textFile.getInputStream();
+        }else{
+            Resource resource = resourceLoader.getResource("classpath:" + STATIC_PRICES_FILE);
+            inputStream = resource.getInputStream();
+        }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             return reader.lines()
                     .map(line -> line.split("\\s*=\\s*", 2))
@@ -45,20 +51,34 @@ public class FileService {
         } 
     }
 
-    public List<AnimalDiet> populateAnimalDietFromCsv() throws IOException, CsvException {
-        Resource resource = resourceLoader.getResource("classpath:" + ANIMALSFILE);
-        return new CsvToBeanBuilder<AnimalDiet>(new InputStreamReader(resource.getInputStream()))
+    public List<AnimalDiet> populateAnimalDietFromCsv(MultipartFile csvFile) throws IOException, CsvException {
+        InputStream inputStream = null;
+        if(csvFile != null){
+            inputStream = csvFile.getInputStream();
+        }else{
+            Resource resource = resourceLoader.getResource("classpath:" + STATIC_ANIMALS_FILE);
+            inputStream = resource.getInputStream();
+            
+        }
+        return new CsvToBeanBuilder<AnimalDiet>(new InputStreamReader(inputStream))
                 .withType(AnimalDiet.class)
                 .withSeparator(';')
                 .build()
                 .parse();
     }
 
-    public Zoo populateZooAnimalsFromXml() throws IOException, JAXBException {
-        Resource resource = resourceLoader.getResource("classpath:" + ZOOFILE);
+    public Zoo populateZooAnimalsFromXml(MultipartFile xmlFile) throws IOException, JAXBException {
+        InputStream inputStream = null;
+        if(xmlFile != null){
+            inputStream = xmlFile.getInputStream();
+        }else{
+            Resource resource = resourceLoader.getResource("classpath:" + STATIC_ZOO_FILE);
+            inputStream = resource.getInputStream();
+            
+        }
         JAXBContext jaxbContext = JAXBContext.newInstance(Zoo.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (Zoo) jaxbUnmarshaller.unmarshal(new InputStreamReader(resource.getInputStream()));
+        return (Zoo) jaxbUnmarshaller.unmarshal(new InputStreamReader(inputStream));
     }
 
 }
