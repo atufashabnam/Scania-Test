@@ -15,6 +15,16 @@ import java.util.stream.Collectors;
 @Service
 public class ZooServiceImpl implements ZooService {
 
+    private static final String LION = "Lion";
+    private static final String TIGER = "Tiger";
+    private static final String GIRAFFE = "Giraffe";
+    private static final String WOLF = "Wolf";
+    private static final String ZEBRA = "Zebra";
+    private static final String PIRANHA = "Piranha";
+    private static final String FRUIT = "fruit";
+    private static final String MEAT = "meat";
+    private static final String BOTH = "both";
+
     private FileService fileService;
 
     public ZooServiceImpl(FileService fileService) {
@@ -37,16 +47,16 @@ public class ZooServiceImpl implements ZooService {
     }
 
     private Float calculateCost(Map<String, Float> prices, Map<String, AnimalDiet> animalDietMap, Zoo zooAnimals) {
-        Float costForLion = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get("Lion"), zooAnimals.getLions());
-        Float costForGiraffe = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get("Giraffe"),
+        Float costForLion = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get(LION), zooAnimals.getLions());
+        Float costForGiraffe = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get(GIRAFFE),
                 zooAnimals.getGiraffes());
-        Float costForTiger = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get("Tiger"),
+        Float costForTiger = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get(TIGER),
                 zooAnimals.getTigers());
-        Float costForZebra = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get("Zebra"),
+        Float costForZebra = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get(ZEBRA),
                 zooAnimals.getZebras());
-        Float costForWolf = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get("Wolf"),
+        Float costForWolf = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get(WOLF),
                 zooAnimals.getWolves());
-        Float costForPiranha = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get("Piranha"),
+        Float costForPiranha = iterateZooAnimalsAndCalculateCost(prices, animalDietMap.get(PIRANHA),
                 zooAnimals.getPiranhas());
         return costForLion + costForGiraffe + costForTiger + costForZebra + costForWolf + costForPiranha;
     }
@@ -58,9 +68,9 @@ public class ZooServiceImpl implements ZooService {
                 Float foodPerWeight = diet.getFoodPerWeight();
                 String foodType = diet.getFoodType();
                 Float percentage = parsePercentage(diet.getPercentageOfMeat());
-                if (foodType.equals("both")) {
-                    Float fruitFoodPrice = prices.get("fruit");
-                    Float meatFoodPrice = prices.get("meat");
+                if (foodType.equals(BOTH)) {
+                    Float fruitFoodPrice = prices.get(FRUIT);
+                    Float meatFoodPrice = prices.get(MEAT);
                     Float bodyWeightForMeat = animal.getKg() * percentage;
                     Float bodyWeightForFruit = animal.getKg() - bodyWeightForMeat;
                     totalCost += meatFoodPrice * bodyWeightForMeat * foodPerWeight;
