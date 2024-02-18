@@ -36,7 +36,7 @@ A third file (zoo.xml) will tell us the content of our zoo
 =======================================
 File: zoo.xml
 =======================================
-<!-- <Zoo>
+<Zoo>
 <Lions>
 <Lion name='Simba' kg='160'/>
 <Lion name='Nala' kg='172'/>
@@ -64,7 +64,7 @@ File: zoo.xml
 <Piranhas>
 <Piranha name='Anastasia' kg='0.5'/>
 </Piranhas>
-</Zoo> -->
+</Zoo>
 =======================================
 
 ##Additional notes
