@@ -26,59 +26,51 @@ import jakarta.xml.bind.Unmarshaller;
 public class FileService {
     private final ResourceLoader resourceLoader;
 
-    private static final String STATIC_PRICES_FILE = "prices.txt";
-    private static final String STATIC_ANIMALS_FILE = "animals.csv";
-    private static final String STATIC_ZOO_FILE = "zoo.xml";
+    private static final String[] STATIC_FILE_NAMES = { "prices.txt", "animals.csv", "zoo.xml" };
 
     public FileService(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
     Map<String, Float> loadPricesFromFile(MultipartFile textFile) throws IOException {
-        InputStream inputStream = null;
-        if(textFile != null){
-            inputStream = textFile.getInputStream();
-        }else{
-            Resource resource = resourceLoader.getResource("classpath:" + STATIC_PRICES_FILE);
-            inputStream = resource.getInputStream();
+        String fileName = getFileName(textFile, STATIC_FILE_NAMES[0]);
+        try (InputStream inputStream = getFileInputStream(fileName)) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                return reader.lines()
+                        .map(line -> line.split("\\s*=\\s*", 2))
+                        .collect(Collectors.toMap(
+                                data -> data[0].toLowerCase(),
+                                data -> Float.parseFloat(data[1])));           
         }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            return reader.lines()
-                    .map(line -> line.split("\\s*=\\s*", 2))
-                    .collect(Collectors.toMap(
-                            data -> data[0].toLowerCase(),
-                            data -> Float.parseFloat(data[1])));
-        } 
     }
 
     public List<AnimalDiet> populateAnimalDietFromCsv(MultipartFile csvFile) throws IOException, CsvException {
-        InputStream inputStream = null;
-        if(csvFile != null){
-            inputStream = csvFile.getInputStream();
-        }else{
-            Resource resource = resourceLoader.getResource("classpath:" + STATIC_ANIMALS_FILE);
-            inputStream = resource.getInputStream();
-            
+        String fileName = getFileName(csvFile, STATIC_FILE_NAMES[1]);
+        try (InputStream inputStream = getFileInputStream(fileName)) {
+            return new CsvToBeanBuilder<AnimalDiet>(new InputStreamReader(inputStream))
+                    .withType(AnimalDiet.class)
+                    .withSeparator(';')
+                    .build()
+                    .parse();
         }
-        return new CsvToBeanBuilder<AnimalDiet>(new InputStreamReader(inputStream))
-                .withType(AnimalDiet.class)
-                .withSeparator(';')
-                .build()
-                .parse();
     }
 
     public Zoo populateZooAnimalsFromXml(MultipartFile xmlFile) throws IOException, JAXBException {
-        InputStream inputStream = null;
-        if(xmlFile != null){
-            inputStream = xmlFile.getInputStream();
-        }else{
-            Resource resource = resourceLoader.getResource("classpath:" + STATIC_ZOO_FILE);
-            inputStream = resource.getInputStream();
-            
+        String fileName = getFileName(xmlFile, STATIC_FILE_NAMES[2]);
+        try (InputStream inputStream = getFileInputStream(fileName)) {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Zoo.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            return (Zoo) jaxbUnmarshaller.unmarshal(new InputStreamReader(inputStream));
         }
-        JAXBContext jaxbContext = JAXBContext.newInstance(Zoo.class);
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (Zoo) jaxbUnmarshaller.unmarshal(new InputStreamReader(inputStream));
+    }
+
+    private String getFileName(MultipartFile file, String defaultFileName) {
+        return file != null ? file.getOriginalFilename() : defaultFileName;
+    }
+
+    private InputStream getFileInputStream(String fileName) throws IOException {
+        Resource resource = resourceLoader.getResource("classpath:" + fileName);
+        return resource.getInputStream();
     }
 
 }
