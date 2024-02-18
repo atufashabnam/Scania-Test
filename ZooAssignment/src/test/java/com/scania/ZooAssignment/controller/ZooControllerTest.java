@@ -21,6 +21,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.scania.ZooAssignment.dto.ZooResponseDto;
 import com.scania.ZooAssignment.service.ZooService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,16 +66,130 @@ public class ZooControllerTest {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<Float> exchange = restTemplate.exchange(
+        ResponseEntity<ZooResponseDto> exchange = restTemplate.exchange(
                 "http://localhost:" + port + "/api/zoo/cost",
                 HttpMethod.GET,
                 requestEntity,
-                Float.class);
+                ZooResponseDto.class);
 
         Assertions.assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(exchange.getBody()).isNotNull();
-        Float cost = exchange.getBody();
+        Float cost = exchange.getBody().totalCostOfFoodPerDay();
         Assertions.assertThat(cost).isEqualTo(1609.0092F);
+    }
+
+    @Test
+    void testToGetTotalFoodCostForLionPerDay() throws Exception {
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<ZooResponseDto> exchange = restTemplate.exchange(
+                "http://localhost:" + port + "/api/zoo/cost",
+                HttpMethod.GET,
+                requestEntity,
+                ZooResponseDto.class);
+
+        Assertions.assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(exchange.getBody()).isNotNull();
+        Float cost = exchange.getBody().costForLion();
+        Assertions.assertThat(cost).isEqualTo(655.632F);
+    }
+
+    @Test
+    void testToGetTotalFoodCostForGiraffePerDay() throws Exception {
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<ZooResponseDto> exchange = restTemplate.exchange(
+                "http://localhost:" + port + "/api/zoo/cost",
+                HttpMethod.GET,
+                requestEntity,
+                ZooResponseDto.class);
+
+        Assertions.assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(exchange.getBody()).isNotNull();
+        Float cost = exchange.getBody().costForGiraffe();
+        Assertions.assertThat(cost).isEqualTo(269.248F);
+    }
+
+    @Test
+    void testToGetTotalFoodCostForTigerPerDay() throws Exception {
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<ZooResponseDto> exchange = restTemplate.exchange(
+                "http://localhost:" + port + "/api/zoo/cost",
+                HttpMethod.GET,
+                requestEntity,
+                ZooResponseDto.class);
+
+        Assertions.assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(exchange.getBody()).isNotNull();
+        Float cost = exchange.getBody().costForTiger();
+        Assertions.assertThat(cost).isEqualTo(487.20245F);
+    }
+
+    @Test
+    void testToGetTotalFoodCostForZebraPerDay() throws Exception {
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<ZooResponseDto> exchange = restTemplate.exchange(
+                "http://localhost:" + port + "/api/zoo/cost",
+                HttpMethod.GET,
+                requestEntity,
+                ZooResponseDto.class);
+
+        Assertions.assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(exchange.getBody()).isNotNull();
+        Float cost = exchange.getBody().costForZebra();
+        Assertions.assertThat(cost).isEqualTo(72.576F);
+    }
+
+    @Test
+    void testToGetTotalFoodCostForWolfPerDay() throws Exception {
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<ZooResponseDto> exchange = restTemplate.exchange(
+                "http://localhost:" + port + "/api/zoo/cost",
+                HttpMethod.GET,
+                requestEntity,
+                ZooResponseDto.class);
+
+        Assertions.assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(exchange.getBody()).isNotNull();
+        Float cost = exchange.getBody().costForWolf();
+        Assertions.assertThat(cost).isEqualTo(122.08056F);
+    }
+
+    @Test
+    void testToGetTotalFoodCostForPiranhaPerDay() throws Exception {
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<ZooResponseDto> exchange = restTemplate.exchange(
+                "http://localhost:" + port + "/api/zoo/cost",
+                HttpMethod.GET,
+                requestEntity,
+                ZooResponseDto.class);
+
+        Assertions.assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(exchange.getBody()).isNotNull();
+        Float cost = exchange.getBody().costForPiranha();
+        Assertions.assertThat(cost).isEqualTo(2.27F);
     }
 
     @Test
@@ -92,16 +207,16 @@ public class ZooControllerTest {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        ResponseEntity<Float> exchange = restTemplate.exchange(
+        ResponseEntity<ZooResponseDto> exchange = restTemplate.exchange(
                 uri,
                 HttpMethod.POST,
                 requestEntity,
-                new ParameterizedTypeReference<Float>() {
+                new ParameterizedTypeReference<ZooResponseDto>() {
                 });
 
         Assertions.assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(exchange.getBody()).isNotNull();
-        Float cost = exchange.getBody();
+        Float cost = exchange.getBody().totalCostOfFoodPerDay();
         Assertions.assertThat(cost).isEqualTo(1609.0092F);
     }
 
@@ -119,15 +234,15 @@ public class ZooControllerTest {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        ResponseEntity<Float> exchange = restTemplate.exchange(
+        ResponseEntity<ZooResponseDto> exchange = restTemplate.exchange(
                 uri,
                 HttpMethod.POST,
                 requestEntity,
-                new ParameterizedTypeReference<Float>() {
+                new ParameterizedTypeReference<ZooResponseDto>() {
                 });
 
         Assertions.assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(exchange.getBody()).isZero();
+        Assertions.assertThat(exchange.getBody().totalCostOfFoodPerDay()).isZero();
     }
 
   @Test
