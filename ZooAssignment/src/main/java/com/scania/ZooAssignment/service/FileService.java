@@ -33,8 +33,7 @@ public class FileService {
 
     Map<String, Float> loadPricesFromFile(MultipartFile textFile) throws IOException {
         String fileName = getFileName(textFile, STATIC_FILE_NAMES[0]);
-        Path filePath = getResourceFilePath(fileName);
-        try (var lines = Files.lines(filePath, StandardCharsets.UTF_8)) {
+        try (var lines = Files.lines(getResourceFilePath(fileName), StandardCharsets.UTF_8)) {
             return lines.map(line -> line.split("\\s*=\\s*", 2))
                         .collect(Collectors.toMap(
                                 data -> data[0].toLowerCase(),
@@ -46,8 +45,7 @@ public class FileService {
 
     public List<AnimalDiet> populateAnimalDietFromCsv(MultipartFile csvFile) throws IOException, CsvException {
         String fileName = getFileName(csvFile, STATIC_FILE_NAMES[1]);
-        Path filePath = getResourceFilePath(fileName);
-        try (var reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
+        try (var reader = Files.newBufferedReader(getResourceFilePath(fileName), StandardCharsets.UTF_8)) {
             return new CsvToBeanBuilder<AnimalDiet>(reader)
                         .withType(AnimalDiet.class)
                         .withSeparator(';')
@@ -60,8 +58,7 @@ public class FileService {
 
     public Zoo populateZooAnimalsFromXml(MultipartFile xmlFile) throws IOException, JAXBException {
         String fileName = getFileName(xmlFile, STATIC_FILE_NAMES[2]);
-        Path filePath = getResourceFilePath(fileName);
-        try (var reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
+        try (var reader = Files.newBufferedReader(getResourceFilePath(fileName), StandardCharsets.UTF_8)) {
             JAXBContext jaxbContext = JAXBContext.newInstance(Zoo.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             return (Zoo) jaxbUnmarshaller.unmarshal(reader);
