@@ -1,5 +1,4 @@
 package com.scania.ZooAssignment.service;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -35,12 +34,11 @@ public class FileService {
     Map<String, Float> loadPricesFromFile(MultipartFile textFile) throws IOException {
         String fileName = getFileName(textFile, STATIC_FILE_NAMES[0]);
         Path filePath = getResourceFilePath(fileName);
-        try {
-            return Files.lines(filePath, StandardCharsets.UTF_8)
-                    .map(line -> line.split("\\s*=\\s*", 2))
-                    .collect(Collectors.toMap(
-                            data -> data[0].toLowerCase(),
-                            data -> Float.parseFloat(data[1])));
+        try (var lines = Files.lines(filePath, StandardCharsets.UTF_8)) {
+            return lines.map(line -> line.split("\\s*=\\s*", 2))
+                        .collect(Collectors.toMap(
+                                data -> data[0].toLowerCase(),
+                                data -> Float.parseFloat(data[1])));
         } catch (IOException e) {
             throw new IOException("Error reading file: " + fileName, e);
         }
@@ -49,12 +47,12 @@ public class FileService {
     public List<AnimalDiet> populateAnimalDietFromCsv(MultipartFile csvFile) throws IOException, CsvException {
         String fileName = getFileName(csvFile, STATIC_FILE_NAMES[1]);
         Path filePath = getResourceFilePath(fileName);
-        try {
-            return new CsvToBeanBuilder<AnimalDiet>(Files.newBufferedReader(filePath, StandardCharsets.UTF_8))
-                    .withType(AnimalDiet.class)
-                    .withSeparator(';')
-                    .build()
-                    .parse();
+        try (var reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
+            return new CsvToBeanBuilder<AnimalDiet>(reader)
+                        .withType(AnimalDiet.class)
+                        .withSeparator(';')
+                        .build()
+                        .parse();
         } catch (IOException e) {
             throw new IOException("Error reading file: " + fileName, e);
         }
@@ -63,10 +61,10 @@ public class FileService {
     public Zoo populateZooAnimalsFromXml(MultipartFile xmlFile) throws IOException, JAXBException {
         String fileName = getFileName(xmlFile, STATIC_FILE_NAMES[2]);
         Path filePath = getResourceFilePath(fileName);
-        try {
+        try (var reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
             JAXBContext jaxbContext = JAXBContext.newInstance(Zoo.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            return (Zoo) jaxbUnmarshaller.unmarshal(Files.newBufferedReader(filePath, StandardCharsets.UTF_8));
+            return (Zoo) jaxbUnmarshaller.unmarshal(reader);
         } catch (IOException e) {
             throw new IOException("Error reading file: " + fileName, e);
         }
