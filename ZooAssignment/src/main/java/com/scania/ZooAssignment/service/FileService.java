@@ -1,9 +1,9 @@
 package com.scania.ZooAssignment.service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,33 +34,41 @@ public class FileService {
 
     Map<String, Float> loadPricesFromFile(MultipartFile textFile) throws IOException {
         String fileName = getFileName(textFile, STATIC_FILE_NAMES[0]);
-        try (InputStream inputStream = getFileInputStream(fileName)) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                return reader.lines()
-                        .map(line -> line.split("\\s*=\\s*", 2))
-                        .collect(Collectors.toMap(
-                                data -> data[0].toLowerCase(),
-                                data -> Float.parseFloat(data[1])));           
+        Path filePath = getResourceFilePath(fileName);
+        try {
+            return Files.lines(filePath, StandardCharsets.UTF_8)
+                    .map(line -> line.split("\\s*=\\s*", 2))
+                    .collect(Collectors.toMap(
+                            data -> data[0].toLowerCase(),
+                            data -> Float.parseFloat(data[1])));
+        } catch (IOException e) {
+            throw new IOException("Error reading file: " + fileName, e);
         }
     }
 
     public List<AnimalDiet> populateAnimalDietFromCsv(MultipartFile csvFile) throws IOException, CsvException {
         String fileName = getFileName(csvFile, STATIC_FILE_NAMES[1]);
-        try (InputStream inputStream = getFileInputStream(fileName)) {
-            return new CsvToBeanBuilder<AnimalDiet>(new InputStreamReader(inputStream))
+        Path filePath = getResourceFilePath(fileName);
+        try {
+            return new CsvToBeanBuilder<AnimalDiet>(Files.newBufferedReader(filePath, StandardCharsets.UTF_8))
                     .withType(AnimalDiet.class)
                     .withSeparator(';')
                     .build()
                     .parse();
+        } catch (IOException e) {
+            throw new IOException("Error reading file: " + fileName, e);
         }
     }
 
     public Zoo populateZooAnimalsFromXml(MultipartFile xmlFile) throws IOException, JAXBException {
         String fileName = getFileName(xmlFile, STATIC_FILE_NAMES[2]);
-        try (InputStream inputStream = getFileInputStream(fileName)) {
+        Path filePath = getResourceFilePath(fileName);
+        try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Zoo.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            return (Zoo) jaxbUnmarshaller.unmarshal(new InputStreamReader(inputStream));
+            return (Zoo) jaxbUnmarshaller.unmarshal(Files.newBufferedReader(filePath, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            throw new IOException("Error reading file: " + fileName, e);
         }
     }
 
@@ -68,9 +76,8 @@ public class FileService {
         return file != null ? file.getOriginalFilename() : defaultFileName;
     }
 
-    private InputStream getFileInputStream(String fileName) throws IOException {
+    private Path getResourceFilePath(String fileName) throws IOException {
         Resource resource = resourceLoader.getResource("classpath:" + fileName);
-        return resource.getInputStream();
+        return resource.getFile().toPath();
     }
-
 }
